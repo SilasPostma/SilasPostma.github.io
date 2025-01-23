@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Predicted Times</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Average Predicted Time</h5>
+                </div>
+                <div class="card-body">
+                    <div class="result text-center">{{ average_time }}</div>
+                </div>
+            </div>
+
+            {% if predictions|length > 1 %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Individual Interval Predictions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Interval</th>
+                                    <th>Predicted Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prediction in predictions %}
+                                <tr>
+                                    <td>Interval {{ prediction.interval }}</td>
+                                    <td>{{ prediction.formatted_time }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="text-center mt-4">
+                <a href="/" class="btn btn-primary">Make Another Prediction</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Rowing Performance Predictor{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-5">
+    <h1 class="text-center mb-3">Rowing Performance Predictor</h1>
+    <form method="POST" action="/" id="predictionForm">
+        <div class="row justify-content-center">
+            <!-- Personal Information Card -->
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white py-2">
+                        <h5 class="card-title mb-0 fs-6">Personal Information</h5>
+                    </div>
+                    <div class="card-body py-2">
+                        <div class="row g-2">
+                            {% for field in ['geslacht', 'gewichtsklasse', 'ervaring', 'ploeg'] %}
+                            <div class="col-12">
+                                <div class="form-group mb-2">
+                                    <label for="{{ field }}" class="form-label fw-bold small mb-1">
+                                        {% if field == 'geslacht' %}Gender
+                                        {% elif field == 'gewichtsklasse' %}Weight Class
+                                        {% elif field == 'ervaring' %}Experience
+                                        {% elif field == 'ploeg' %}Team
+                                        {% endif %}
+                                    </label>
+                                    <select class="form-select form-select-sm" id="{{ field }}" name="{{ field }}" required>
+                                        {% for choice in user_choices[field] %}
+                                            <option value="{{ choice }}">{{ choice }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Information Card -->
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white py-2">
+                        <h5 class="card-title mb-0 fs-6">Training Information</h5>
+                    </div>
+                    <div class="card-body py-2">
+                        <div class="row g-2">
+                            {% for field, choices in user_choices.items() %}
+                            {% if field not in ['geslacht', 'gewichtsklasse', 'ervaring', 'ploeg', '500_split', 'aantal_intervallen'] %}
+                            <div class="col-12">
+                                <div class="form-group mb-2">
+                                    <label for="{{ field }}" class="form-label fw-bold small mb-1">
+                                        {% if field == 'spm' %}Strokes per Minute
+                                        {% elif field == 'trainingype' %}Training Type
+                                        {% elif field == 'interval_tijd' %}Interval Time
+                                        {% elif field == 'interval_nummer' %}Interval Number
+                                        {% elif field == 'interval_afstand' %}Interval Distance
+                                        {% elif field == 'intervaltype' %}Interval Type
+                                        {% elif field == 'rust' %}Rest Time
+                                        {% else %}{{ field|title }}
+                                        {% endif %}
+                                    </label>
+                                    <select class="form-select form-select-sm" id="{{ field }}" name="{{ field }}" required>
+                                        {% for choice in choices %}
+                                            <option value="{{ choice }}">{{ choice }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Split Times Card -->
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white py-2">
+                        <h5 class="card-title mb-0 fs-6">Split Times</h5>
+                    </div>
+                    <div class="card-body py-2">
+                        <div class="form-group mb-3">
+                            <label for="aantal_intervallen" class="form-label fw-bold small mb-1">Number of Intervals</label>
+                            <select class="form-select form-select-sm" id="aantal_intervallen" name="aantal_intervallen" 
+                                    onchange="updateSplitFields(this.value)" required>
+                                {% for choice in user_choices.aantal_intervallen %}
+                                    <option value="{{ choice }}">{{ choice }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div id="splitFields" class="row g-2">
+                            <div class="col-12">
+                                <div class="form-group mb-2">
+                                    <label for="500_split_1" class="form-label fw-bold small mb-1">500m Split Time 1</label>
+                                    <div class="input-group input-group-sm">
+                                        <input type="number" step="0.01" class="form-control" id="500_split_1" name="500_split_1" required>
+                                        <span class="input-group-text">sec</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-4">Predict Performance</button>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+function updateSplitFields(value) {
+    const splitFieldsDiv = document.getElementById('splitFields');
+    splitFieldsDiv.innerHTML = '';
+    
+    const numIntervals = (value === 'x') ? 1 : parseInt(value);
+    
+    for (let i = 1; i <= numIntervals; i++) {
+        const div = document.createElement('div');
+        div.className = 'col-12';
+        div.innerHTML = `
+            <div class="form-group mb-2">
+                <label for="500_split_${i}" class="form-label fw-bold small mb-1">500m Split Time ${i}</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" step="0.01" class="form-control" id="500_split_${i}" name="500_split_${i}" required>
+                    <span class="input-group-text">sec</span>
+                </div>
+            </div>
+        `;
+        splitFieldsDiv.appendChild(div);
+    }
+}
+</script>
+{% endblock %}
+{% endblock %} 

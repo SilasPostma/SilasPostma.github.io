@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}About - RowPredict{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">About RowPredict</h1>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <p class="lead">
+                RowPredict is an advanced machine learning tool designed to help rowing athletes and coaches predict performance times based on various training parameters.
+            </p>
+            <h3>How it Works</h3>
+            <p>
+                Our prediction model uses Random Forest technology trained on extensive rowing data to provide accurate performance predictions. By analyzing factors such as:
+            </p>
+            <ul>
+                <li>Gender and weight class</li>
+                <li>Experience level</li>
+                <li>Training type and intensity</li>
+                <li>Interval specifications</li>
+                <li>Stroke rates (SPM)</li>
+            </ul>
+            <p>
+                The model can predict expected performance times, helping coaches and athletes optimize their training programs.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %} 
